@@ -35,6 +35,7 @@ speechBtn.addEventListener("click", e =>{
             textToSpeech(textarea.value);
         }
         if(textarea.value.length > 80){  //if the text is more than 80 characters then pause and resume speech is enabled
+            
             // check to see if speech in speaking process or not every 100ms
             // if not then set isSpeaking to true and change button text
             setInterval(()=>{
