@@ -1,4 +1,4 @@
-# text-to-speech
+# Text to Speech using JavaScript
 
 <ul>
 <li>This is javascript app which converts text entered into speech using Web Speech API.</li>
