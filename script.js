@@ -1,9 +1,11 @@
-const textarea = document.querySelector("textarea"),
+textarea = document.querySelector("textarea"),
 voiceList = document.querySelector("select"),
-speechBtn = document.querySelector("button");
+speechBtn = document.getElementById("speech");
+textBtn = document.getElementById("text");
 
 let synth = speechSynthesis,
 isSpeaking = true;
+isRecording = true;
 
 voices();
 
@@ -19,6 +21,7 @@ function voices(){
 synth.addEventListener("voiceschanged", voices);
 
 function textToSpeech(text){
+    console.log("text")
     let utterance = new SpeechSynthesisUtterance(text);  //new request for speech
     for(let voice of synth.getVoices()){
         if(voice.name === voiceList.value){  //if the avilable device voice name is equal to user selected voice then set the speech voice as that
@@ -30,12 +33,13 @@ function textToSpeech(text){
 
 speechBtn.addEventListener("click", e =>{
     e.preventDefault(); //preventing form from submitting
+    console.log("speech")
     if(textarea.value !== ""){
         if(!synth.speaking){  //if a speech is not currently in the process of speaking
             textToSpeech(textarea.value);
         }
         if(textarea.value.length > 80){  //if the text is more than 80 characters then pause and resume speech is enabled
-            
+
             // check to see if speech in speaking process or not every 100ms
             // if not then set isSpeaking to true and change button text
             setInterval(()=>{
@@ -59,4 +63,58 @@ speechBtn.addEventListener("click", e =>{
             speechBtn.innerText = "Convert To Speech";
         }
     }
+});
+
+// speech to text
+
+var SpeechRecognition = window.webkitSpeechRecognition;
+  
+var recognition = new SpeechRecognition();
+
+var Content = '';
+
+recognition.continuous = true;
+
+recognition.onresult = function(event) {
+
+    var current = event.resultIndex;
+
+    var transcript = event.results[current][0].transcript;
+
+    Content += transcript;
+    textarea.value = Content;
+  
+};
+
+recognition.onstart = function() { 
+    console.log('Voice recognition is ON.');
+}
+
+recognition.onspeechend = function() {
+    console.log('No activity.');
+}
+
+recognition.onerror = function(event) {
+    if(event.error == 'no-speech') {
+        console.log('Try again.');  
+    }
+}
+
+textBtn.addEventListener("click", e =>{
+    e.preventDefault();
+    if (Content.length) {
+        Content += ' ';
+    }
+    if(isRecording){
+        textarea.value = "";
+        recognition.start();
+        isRecording = false;
+        textBtn.innerText = "Stop Converting";
+    }
+    else{  // else pause the speech
+        recognition.stop();
+        isRecording = true;
+        textBtn.innerText = "Convert To Word";
+    }
+    
 });
