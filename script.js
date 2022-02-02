@@ -21,7 +21,6 @@ function voices(){
 synth.addEventListener("voiceschanged", voices);
 
 function textToSpeech(text){
-    console.log("text")
     let utterance = new SpeechSynthesisUtterance(text);  //new request for speech
     for(let voice of synth.getVoices()){
         if(voice.name === voiceList.value){  //if the avilable device voice name is equal to user selected voice then set the speech voice as that
@@ -33,7 +32,6 @@ function textToSpeech(text){
 
 speechBtn.addEventListener("click", e =>{
     e.preventDefault(); //preventing form from submitting
-    console.log("speech")
     if(textarea.value !== ""){
         if(!synth.speaking){  //if a speech is not currently in the process of speaking
             textToSpeech(textarea.value);
